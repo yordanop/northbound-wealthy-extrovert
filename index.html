@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.0/css/bulma.css">
+    <title>Weather Dashboard</title>
+</head>
+<body>
+    <section class="hero is-link m-3">
+        <div class="hero-body">
+          <p class="title">Weather Dashboard</p>
+          <p class="subtitle">city Info</p>
+        </div>
+    </section>
+
+    <section class="main-content columns is-fullheight">
+        <aside class="menu column is-3 px-6 py-3">
+            <div class="block">
+                <p class="menu-label">Search for a city:</p>
+            </div>
+            
+            <div class="block">
+                <input class="input is-warning" type="text" placeholder="Search City"/>
+            </div>
+
+            <div class="block">
+                <p class="menu-label">Search History:</p>
+            </div>
+            
+            <div class="block">
+                <div id="history-container">
+                    <ul class="menu-list m-4">
+                        <div class="block">
+                            <li>
+                                <button class="button has-background-info-soft">
+                                    City_1
+                                </button>                        
+                            </li>
+                        </div>
+                    </ul>
+                    <ul class="menu-list m-4">
+                        <div class="block">
+                            <li>
+                                <button class="button has-background-info-soft">
+                                    City_1
+                                </button>                        
+                            </li>
+                        </div>
+                    </ul>
+                    <ul class="menu-list m-4">
+                        <div class="block">
+                            <li>
+                                <button class="button has-background-info-soft">
+                                    City_1
+                                </button>                        
+                            </li>
+                        </div>
+                    </ul>
+                    <ul class="menu-list m-4">
+                        <div class="block">
+                            <li>
+                                <button class="button has-background-info-soft">
+                                    City_1
+                                </button>                        
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+    
+        
+        <div class="column">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-header is-flex is-flex-direction-columns">
+                        <h2 id="main-city-name" class="title">City name</h2>
+                        <p id="main-date"> (11/05/2024)</p>
+                        <img id="main-weather-logo" src="" alt="">
+                    </div>
+                    <div>
+                    <div class="block">
+                        <p class="subtitle">Humidity</p>
+                    </div>
+                    <div class="block">
+                        <p class="subtitle">Temperature</p>
+                    </div>
+                    <div class="block">
+                        <p class="subtitle">Windspeed</p>
+                    </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    
+</body>
+</html>
