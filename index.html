@@ -7,7 +7,7 @@
     <title>Weather Dashboard</title>
 </head>
 <body>
-    <section class="hero is-link m-3">
+    <section class="hero is-info mb-5">
         <div class="hero-body">
           <p class="title">Weather Dashboard</p>
           <p class="subtitle">city Info</p>
@@ -15,13 +15,13 @@
     </section>
 
     <section class="main-content columns is-fullheight">
-        <aside class="menu column is-3 px-6 py-3">
+        <aside class="menu column is-4 px-6 py-3">
             <div class="block">
                 <p class="menu-label">Search for a city:</p>
             </div>
             
             <div class="block">
-                <input class="input is-warning" type="text" placeholder="Search City"/>
+                <input class="input is-primary" type="text" placeholder="Search City"/>
             </div>
 
             <div class="block">
@@ -29,11 +29,11 @@
             </div>
             
             <div class="block">
-                <div id="history-container">
+                <div id="history-container buttons are-large is-responsive">
                     <ul class="menu-list m-4">
                         <div class="block">
                             <li>
-                                <button class="button has-background-info-soft">
+                                <button class="button has-background-info-soft ">
                                     City_1
                                 </button>                        
                             </li>
@@ -71,26 +71,53 @@
         </aside>
 
     
-        
-        <div class="column">
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-header is-flex is-flex-direction-columns">
-                        <h2 id="main-city-name" class="title">City name</h2>
-                        <p id="main-date"> (11/05/2024)</p>
-                        <img id="main-weather-logo" src="" alt="">
+        <div id="forecast-info" class="column is-flex is-flex-direction-column mr-4">
+            <div class="mt-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-header is-flex is-flex-direction-columns is-justify-contents-center has-text-centered mb-3">
+                            <h2 id="main-city-name" class="title m-4">City name</h2>
+                            <p id="main-date" class="m-4 p-2"> (11/05/2024)</p>
+                            <img id="main-weather-logo" src="" alt="">
+                        </div>
+                        <div>
+                        <div class="block">
+                            <p class="subtitle">Humidity</p>
+                        </div>
+                        <div class="block">
+                            <p class="subtitle">Temperature</p>
+                        </div>
+                        <div class="block">
+                            <p class="subtitle">Windspeed</p>
+                        </div>
+                            
+                        </div>
                     </div>
-                    <div>
-                    <div class="block">
-                        <p class="subtitle">Humidity</p>
+                </div>
+            </div>
+    
+            <h2 class="title m-6">5 Day Forecast :</h2>
+            <div id="next-days">
+                <div class="columns">
+
+                    <div class="card column">
+    
                     </div>
-                    <div class="block">
-                        <p class="subtitle">Temperature</p>
+
+                    <div class="card column">
+    
                     </div>
-                    <div class="block">
-                        <p class="subtitle">Windspeed</p>
+
+                    <div class="card column">
+    
                     </div>
-                        
+
+                    <div class="card column">
+    
+                    </div>
+
+                    <div class="card column">
+    
                     </div>
                 </div>
             </div>
