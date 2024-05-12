@@ -70,8 +70,8 @@ function createForecastCard(dayInfo){
     const humidContainer = document.createElement('p');
     const windContainer = document.createElement('p');
     const tempContainer = document.createElement('p');
-
-
+    
+    
     const dayBlock = document.createElement('div');
     const iconBlock = document.createElement('div');
     const humidBlock = document.createElement('div');
@@ -79,16 +79,16 @@ function createForecastCard(dayInfo){
     const tempBlock = document.createElement('div');
 
     const cardElements = [dayBlock, iconBlock, tempBlock, windBlock, humidBlock];
-
+    
     const nextDay = dayjs(dayInfo.dt_txt).format('MM/DD/YYYY');
     const iconUrl = `https://openweathermap.org/img/w/${dayInfo.weather[0].icon}.png`;
-    console.log(dayInfo);
-
+    
+    
     for(let element_i of cardElements){
         element_i.setAttribute('class', 'block')
     }
 
-    cardContainer.setAttribute('class', 'card column m-3');
+    cardContainer.setAttribute('class', 'card column m-3 fcst-card');
     dayContainer.setAttribute('class', 'subtitle is-4');
 
     dayContainer.innerHTML = `(${nextDay})`;
@@ -113,6 +113,15 @@ function createForecastCard(dayInfo){
 
 }
 
+
+function deleteCards(){
+    const fcstContainer = document.querySelectorAll('.fcst-card');
+
+    for(let card_i of fcstContainer){
+        card_i.remove();
+    }
+}
+
 window.addEventListener('DOMContentLoaded', function(event){
     const humidMain = document.querySelector('#hum-main');
     const tempMain = document.querySelector('#temp-main');
@@ -129,6 +138,8 @@ window.addEventListener('DOMContentLoaded', function(event){
                         if(coordinates !== undefined){
                                 getWeatherInfo(coordinates)
                             .then(function(data_1){
+                                setTimeout(function(){},1000);
+                                deleteCards();
 
                                 let nameData = data_1.city.name;
             
@@ -140,8 +151,9 @@ window.addEventListener('DOMContentLoaded', function(event){
                                 localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
                                 cityTitle.textContent = `${nameData} Info`;
                                 cityInfoTitle.textContent = nameData;
-                                
-                                let basicInfo = data_1.info[0];
+
+                                const newCountryInfo =data_1.list;
+                                let basicInfo = newCountryInfo[0];
                                 const mainIconUrl = `https://openweathermap.org/img/w/${basicInfo.weather[0].icon}.png`;
                                 const todayVar = dayjs(basicInfo.dt_txt).format('MM/DD/YYYY');
                                 
@@ -154,13 +166,12 @@ window.addEventListener('DOMContentLoaded', function(event){
                                 windMain.textContent = `Wind : ${basicInfo.wind.speed} MPH`;
                                 iconMain.setAttribute('src', mainIconUrl);
 
-
-                                for (let day_i = 8; day_i < data_1.info.length; day_i += 8){
-                                    basicInfo = data_1.info[day_i];
+                                for (let day_i = 8; day_i < newCountryInfo.length; day_i += 8){
+                                    basicInfo = newCountryInfo[day_i];
                                     createForecastCard(basicInfo);
                                 }
-                                
-                                basicInfo = data_1.info[data_1.info.length - 1];
+
+                                basicInfo = newCountryInfo[newCountryInfo.length - 1];
                                 createForecastCard(basicInfo);
                                 createHistButton(nameData);
                             }
@@ -177,9 +188,6 @@ window.addEventListener('DOMContentLoaded', function(event){
 
         
     })
-
-    let data_1 = JSON.parse(localStorage.getItem('allCountries'))[0];
-    let nameData = data_1.countryName;
     
 
 })
