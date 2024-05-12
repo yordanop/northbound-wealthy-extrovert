@@ -122,12 +122,44 @@ function deleteCards(){
     }
 }
 
-window.addEventListener('DOMContentLoaded', function(event){
+function changeCityInfo(cityName, cityWeatherInfo){
     const humidMain = document.querySelector('#hum-main');
     const tempMain = document.querySelector('#temp-main');
     const windMain = document.querySelector('#wind-main');
     const dateMain = document.querySelector('#main-date');
     const iconMain = document.querySelector('#main-weather-logo');
+
+    deleteCards();
+    
+    cityTitle.textContent = `${cityName} Info`;
+    cityInfoTitle.textContent = cityName;
+    
+    let basicInfo = cityWeatherInfo[0];
+    const mainIconUrl = `https://openweathermap.org/img/w/${basicInfo.weather[0].icon}.png`;
+    const todayVar = dayjs(basicInfo.dt_txt).format('MM/DD/YYYY');
+    
+    dateMain.innerHTML = `(${todayVar})`;
+    cityTitle.textContent = `${cityName} Info`;
+    cityInfoTitle.textContent = cityName;
+    
+    humidMain.textContent = `Humidity : ${basicInfo.main.humidity}%`;
+    tempMain.textContent = `Temperature : ${basicInfo.main.temp} °F`;
+    windMain.textContent = `Wind : ${basicInfo.wind.speed} MPH`;
+    iconMain.setAttribute('src', mainIconUrl);
+    
+    for (let day_i = 8; day_i < cityWeatherInfo.length; day_i += 8){
+        basicInfo = cityWeatherInfo[day_i];
+        createForecastCard(basicInfo);
+    }
+    
+    basicInfo = cityWeatherInfo[cityWeatherInfo.length - 1];
+    createForecastCard(basicInfo);
+    createHistButton(cityName);
+}
+
+
+
+window.addEventListener('DOMContentLoaded', function(event){
 
     searchBar.addEventListener('keypress', function(enterKey){
         cityNameInput = searchBar.value;
@@ -138,42 +170,17 @@ window.addEventListener('DOMContentLoaded', function(event){
                         if(coordinates !== undefined){
                                 getWeatherInfo(coordinates)
                             .then(function(data_1){
-                                setTimeout(function(){},1000);
-                                deleteCards();
 
+                                setTimeout(function(){
+                                    countriesInfo.push({
+                                        countryName : nameData,
+                                        info:data_1.list
+                                    });
+                                    
+                                    localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
+                                },1000);
                                 let nameData = data_1.city.name;
-            
-                                countriesInfo.push({
-                                    countryName : nameData,
-                                    info:data_1.list
-                                });
-            
-                                localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
-                                cityTitle.textContent = `${nameData} Info`;
-                                cityInfoTitle.textContent = nameData;
-
-                                const newCountryInfo =data_1.list;
-                                let basicInfo = newCountryInfo[0];
-                                const mainIconUrl = `https://openweathermap.org/img/w/${basicInfo.weather[0].icon}.png`;
-                                const todayVar = dayjs(basicInfo.dt_txt).format('MM/DD/YYYY');
-                                
-                                dateMain.innerHTML = `(${todayVar})`;
-                                cityTitle.textContent = `${nameData} Info`;
-                                cityInfoTitle.textContent = nameData;
-
-                                humidMain.textContent = `Humidity : ${basicInfo.main.humidity}%`;
-                                tempMain.textContent = `Temperature : ${basicInfo.main.temp} °F`;
-                                windMain.textContent = `Wind : ${basicInfo.wind.speed} MPH`;
-                                iconMain.setAttribute('src', mainIconUrl);
-
-                                for (let day_i = 8; day_i < newCountryInfo.length; day_i += 8){
-                                    basicInfo = newCountryInfo[day_i];
-                                    createForecastCard(basicInfo);
-                                }
-
-                                basicInfo = newCountryInfo[newCountryInfo.length - 1];
-                                createForecastCard(basicInfo);
-                                createHistButton(nameData);
+                                changeCityInfo(nameData, data_1.list);
                             }
                         );
                     }else{
@@ -181,12 +188,8 @@ window.addEventListener('DOMContentLoaded', function(event){
                     }
                 }
             );
-            
             searchBar.value = '';
         }
-
-
-        
     })
     
 
