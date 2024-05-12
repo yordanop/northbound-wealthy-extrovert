@@ -1,4 +1,10 @@
-const apiKey = 'dbcbb9c589f4c0f5a4c4b3b1eb796173'
+const apiKey = 'dbcbb9c589f4c0f5a4c4b3b1eb796173';
+const searchBar = document.querySelector('#search-bar');
+const cityTitle = document.querySelector('#city-title');
+const cityInfoTitle = document.querySelector('#main-city-name');
+
+let countriesInfo = JSON.parse(localStorage.getItem('allCountries')) || [];
+
 
 function getWeatherInfo(coord){
     const apiWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.latitude}&lon=${coord.longiitude}&appid=${apiKey}`;
@@ -11,8 +17,7 @@ function getWeatherInfo(coord){
         }
     })
     .then(function(data) {
-        return data; 
-        console.log(data);
+        return data;
     })
     .catch(function (error) {
         alert('Unable to connect Weather API');
@@ -20,13 +25,13 @@ function getWeatherInfo(coord){
 }
 
 function getGeoInfo(cityName){
-    const apiWeatherGeoUrl = `https://api.openweathermap.org/data/2.5/forecast?q=London&appid=${apiKey}`;
+    const apiWeatherGeoUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`;
     return fetch(apiWeatherGeoUrl)
     .then(function (response) {
         if (response.ok) {
             return response.json();
         }else {
-            alert(`Error:${response.statusText}`);
+            alert(`Country ${response.statusText}`);
         }
     })
     .then(function (data) {
@@ -39,21 +44,44 @@ function getGeoInfo(cityName){
     });
 }
 
-// getGeoInfo('London')
-//     .then(function(coordinates) {
-//         getWeatherInfo(coordinates)
-//             .then(function(data_1){
-//                 console.log(data_1)
-//             });
-//         });
 
 window.addEventListener('DOMContentLoaded', function(event){
-    const searchBar = document.querySelector('#search-bar');
-    
-    searchBar.addEventListener('keypress', function(enterKey){
-        if(enterKey.key === 'Enter'){
-            console.log(searchBar.value);
-            searchBar.value = '';
-        }
-    })
+    const hum
+    // searchBar.addEventListener('keypress', function(enterKey){
+    //     cityNameInput = searchBar.value;
+        
+    //     if(enterKey.key === 'Enter'){
+            // getGeoInfo(cityNameInput)
+            //     .then(function(coordinates) {
+                //         if(coordinates !== undefined){
+                    //             getWeatherInfo(coordinates)
+            //                 .then(function(data_1){
+
+            //                     let nameData = data_1.city.name;
+            
+            //                     countriesInfo.push({[nameData]:data_1.list});
+            
+            //                     localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
+            //                     cityTitle.textContent = `${nameData} Info`;
+            //                     cityInfoTitle.textContent = nameData;                                                    
+            //                 }
+            //             );
+            //         }else{
+            //             searchBar.value = '';
+            //         }
+            //     }
+            // );
+            
+            
+            
+            
+        //     searchBar.value = '';
+        // }
+        let data_1 = JSON.parse(localStorage.getItem('allCountries'))[0];
+        let nameData = 'Mexico';
+        
+        cityTitle.textContent = `${nameData} Info`;
+        cityInfoTitle.textContent = nameData;
+    // })
+
 })
