@@ -37,7 +37,8 @@ function getGeoInfo(cityName){
     .then(function (data) {
         const latitude = data.city.coord.lat;
         const longiitude = data.city.coord.lon;
-        return {latitude, longiitude};
+        const cityname = data.city.name;
+        return {latitude, longiitude, cityname};
         })
     .catch(function (error) {
         alert('Unable to connect Geolatitude API');
@@ -122,7 +123,7 @@ function deleteCards(){
     }
 }
 
-function changeCityInfo(cityName, cityWeatherInfo){
+function changeCityInfo(cityWeatherInfo){
     const humidMain = document.querySelector('#hum-main');
     const tempMain = document.querySelector('#temp-main');
     const windMain = document.querySelector('#wind-main');
@@ -131,10 +132,12 @@ function changeCityInfo(cityName, cityWeatherInfo){
 
     deleteCards();
     
+    const cityName = cityWeatherInfo.city.name;
+
     cityTitle.textContent = `${cityName} Info`;
     cityInfoTitle.textContent = cityName;
     
-    let basicInfo = cityWeatherInfo[0];
+    let basicInfo = cityWeatherInfo.list[0];
     const mainIconUrl = `https://openweathermap.org/img/w/${basicInfo.weather[0].icon}.png`;
     const todayVar = dayjs(basicInfo.dt_txt).format('MM/DD/YYYY');
     
@@ -147,50 +150,58 @@ function changeCityInfo(cityName, cityWeatherInfo){
     windMain.textContent = `Wind : ${basicInfo.wind.speed} MPH`;
     iconMain.setAttribute('src', mainIconUrl);
     
-    for (let day_i = 8; day_i < cityWeatherInfo.length; day_i += 8){
-        basicInfo = cityWeatherInfo[day_i];
+    for (let day_i = 8; day_i < cityWeatherInfo.list.length; day_i += 8){
+        basicInfo = cityWeatherInfo.list[day_i];
         createForecastCard(basicInfo);
     }
     
-    basicInfo = cityWeatherInfo[cityWeatherInfo.length - 1];
+    basicInfo = cityWeatherInfo.list[cityWeatherInfo.list.length - 1];
     createForecastCard(basicInfo);
     createHistButton(cityName);
 }
 
+function cityNotRepeated(cityInfo){
+    let storedCities = JSON.parse(localStorage.getItem('allCountries'));
+    let countryisrepeated = false;
 
+    for(let city_i of storedCities){
+        if(city_i.countryName === cityInfo){
+            countryisrepeated = true;
+        };
+
+    };
+    
+    return countryisrepeated;
+}
 
 window.addEventListener('DOMContentLoaded', function(event){
 
     searchBar.addEventListener('keypress', function(enterKey){
-        cityNameInput = searchBar.value;
-        
         if(enterKey.key === 'Enter'){
+            cityNameInput = searchBar.value;
             getGeoInfo(cityNameInput)
-                .then(function(coordinates) {
-                        if(coordinates !== undefined){
-                                getWeatherInfo(coordinates)
-                            .then(function(data_1){
-
-                                setTimeout(function(){
-                                    countriesInfo.push({
-                                        countryName : nameData,
-                                        info:data_1.list
-                                    });
-                                    
-                                    localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
-                                },1000);
-                                let nameData = data_1.city.name;
-                                changeCityInfo(nameData, data_1.list);
-                            }
-                        );
+            .then(function(coordinates) {
+                if(!cityNotRepeated(coordinates.cityname)){
+                    console.log(coordinates !== undefined)
+                    console.log(!cityNotRepeated(coordinates.cityname))
+                    console.log(((!cityNotRepeated(coordinates.cityname)) || (coordinates !== undefined)))
+                    getWeatherInfo(coordinates)
+                    .then(function(data_1){
+                        setTimeout(function(){
+                            countriesInfo.push({
+                                countryName : data_1.city.name,
+                                info:data_1.list
+                            });
+                            localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
+                                
+                            changeCityInfo(data_1);
+                            },1000);
+                        });
                     }else{
-                        searchBar.value = '';
-                    }
-                }
-            );
+                    searchBar.value = '';
+                };
+            });
             searchBar.value = '';
         }
-    })
-    
-
-})
+    });
+});
