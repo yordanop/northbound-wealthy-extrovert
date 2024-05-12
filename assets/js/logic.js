@@ -60,11 +60,42 @@ function createHistButton(cityName){
     buttonsContainer.appendChild(blockDiv);
 }
 
+function createForecastCard(dayInfo){
+    const cardsContainer = document.querySelector('#next-days');
+
+    const cardContainer = document.createElement('div');
+    const dayContainer = document.createElement('h3');
+    const humidContainer = document.createElement('p');
+    const windContainer = document.createElement('p');
+    const tempContainer = document.createElement('p');
+
+    cardContainer.setAttribute('class', 'card column m-3');
+    dayContainer.setAttribute('class', 'subtitle is-4');
+
+
+    let nextDay = dayjs(dayInfo.dt_txt).format('MM/DD/YYYY');
+
+    
+    dayContainer.innerHTML = `(${nextDay})`;
+
+    humidContainer.textContent = `Humidity : ${dayInfo.main.humidity}%`;
+    tempContainer.textContent = `Temp : ${dayInfo.main.temp} °F`;
+    windContainer.textContent = `Wind : ${dayInfo.wind.speed} MPH`;
+
+    cardContainer.appendChild(dayContainer);
+    cardContainer.appendChild(tempContainer);
+    cardContainer.appendChild(windContainer);
+    cardContainer.appendChild(humidContainer);
+
+    cardsContainer.appendChild(cardContainer);
+
+}
+
 window.addEventListener('DOMContentLoaded', function(event){
     const humidMain = document.querySelector('#hum-main');
     const tempMain = document.querySelector('#temp-main');
     const windMain = document.querySelector('#wind-main');
-    const dateMain = this.document.querySelector('#main-date');
+    const dateMain = document.querySelector('#main-date');
 
     // searchBar.addEventListener('keypress', function(enterKey){
     //     cityNameInput = searchBar.value;
@@ -103,7 +134,7 @@ window.addEventListener('DOMContentLoaded', function(event){
     let data_1 = JSON.parse(localStorage.getItem('allCountries'))[0];
     let nameData = data_1.countryName;
     let basicInfo = data_1.info[0];
-    const todayVar = dayjs(basicInfo.dt_text).format('MM/DD/YYYY');
+    const todayVar = dayjs(basicInfo.dt_txt).format('MM/DD/YYYY');
     
     dateMain.innerHTML = `(${todayVar})`;
     cityTitle.textContent = `${nameData} Info`;
@@ -118,5 +149,8 @@ window.addEventListener('DOMContentLoaded', function(event){
         basicInfo = data_1.info[day_i];
         createForecastCard(basicInfo);
     }
+    
+    basicInfo = data_1.info[data_1.info.length - 1];
+    createForecastCard(basicInfo);
 
 })
