@@ -53,7 +53,7 @@ function createHistButton(cityName){
     const newButton = document.createElement('button');
 
     blockDiv.setAttribute('class', 'block');
-    newButton.setAttribute('class', 'button has-background-info-soft');
+    newButton.setAttribute('class', 'button has-background-info-soft city-button');
     
     newButton.innerHTML = cityName;
 
@@ -136,9 +136,20 @@ function changeCityInfo(cityWeatherInfo){
     const dateMain = document.querySelector('#main-date');
     const iconMain = document.querySelector('#main-weather-logo');
 
+    const allButtons = document.querySelectorAll('.city-button')
+
     deleteCards();
-    console.log(cityWeatherInfo);
+
     const cityName = cityWeatherInfo.countryName;
+
+    for(let button_i of allButtons){
+        console.log(button_i.innerHTML)
+        if(cityName === button_i.innerHTML){
+            button_i.setAttribute('class', 'button has-background-link city-button is-active');
+        }else{
+            button_i.setAttribute('class', 'button has-background-info-soft city-button');
+        }
+    }
 
     cityTitle.textContent = `${cityName} Info`;
     cityInfoTitle.textContent = cityName;
@@ -182,8 +193,10 @@ window.addEventListener('DOMContentLoaded', function(event){
         for (registeredCountry of countriesInfo){
             createHistButton(registeredCountry.countryName);
         }
+    }else{
+        countriesInfo = [];
     }
-    
+
     searchBar.addEventListener('keypress', function(enterKey){
         if(enterKey.key === 'Enter'){
             cityNameInput = searchBar.value;
