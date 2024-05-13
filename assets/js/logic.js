@@ -61,6 +61,11 @@ function createHistButton(cityName){
     blockDiv.appendChild(menuList);
 
     buttonsContainer.appendChild(blockDiv);
+    newButton.addEventListener('click', function(event){
+        const cityInfo = countriesInfo.find(country => country.countryName === event.target.innerHTML);
+        changeCityInfo(cityInfo);
+    }
+)
 }
 
 function createForecastCard(dayInfo){
@@ -132,7 +137,7 @@ function changeCityInfo(cityWeatherInfo){
     const iconMain = document.querySelector('#main-weather-logo');
 
     deleteCards();
-    
+    console.log(cityWeatherInfo);
     const cityName = cityWeatherInfo.countryName;
 
     cityTitle.textContent = `${cityName} Info`;
@@ -173,6 +178,12 @@ function cityNotRepeated(cityInfo){
 }
 
 window.addEventListener('DOMContentLoaded', function(event){
+    if(countriesInfo.length>0){
+        for (registeredCountry of countriesInfo){
+            createHistButton(registeredCountry.countryName);
+        }
+    }
+    
     searchBar.addEventListener('keypress', function(enterKey){
         if(enterKey.key === 'Enter'){
             cityNameInput = searchBar.value;
@@ -189,7 +200,7 @@ window.addEventListener('DOMContentLoaded', function(event){
                             });
                             localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
                             createHistButton(data_1.city.name);
-                            },1500);
+                            },2000);
                         });
                     }else{    
                         searchBar.value = '';
@@ -199,7 +210,7 @@ window.addEventListener('DOMContentLoaded', function(event){
                 countriesInfo = JSON.parse(localStorage.getItem('allCountries'));
                 const actInfo = countriesInfo.find(country => country.countryName === cityApiName)
                 changeCityInfo(actInfo);
-            }, 2000);
+            }, 2500);
 
             searchBar.value = '';
         };
