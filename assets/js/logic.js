@@ -4,6 +4,7 @@ const cityTitle = document.querySelector('#city-title');
 const cityInfoTitle = document.querySelector('#main-city-name');
 
 let countriesInfo = JSON.parse(localStorage.getItem('allCountries')) || [];
+let cityApiName = null;
 
 
 function getWeatherInfo(coord){
@@ -132,12 +133,11 @@ function changeCityInfo(cityWeatherInfo){
 
     deleteCards();
     
-    const cityName = cityWeatherInfo.city.name;
+    const cityName = cityWeatherInfo.countryName;
 
     cityTitle.textContent = `${cityName} Info`;
     cityInfoTitle.textContent = cityName;
-    
-    let basicInfo = cityWeatherInfo.list[0];
+    let basicInfo = cityWeatherInfo.info[0];
     const mainIconUrl = `https://openweathermap.org/img/w/${basicInfo.weather[0].icon}.png`;
     const todayVar = dayjs(basicInfo.dt_txt).format('MM/DD/YYYY');
     
@@ -150,41 +150,36 @@ function changeCityInfo(cityWeatherInfo){
     windMain.textContent = `Wind : ${basicInfo.wind.speed} MPH`;
     iconMain.setAttribute('src', mainIconUrl);
     
-    for (let day_i = 8; day_i < cityWeatherInfo.list.length; day_i += 8){
-        basicInfo = cityWeatherInfo.list[day_i];
+    for (let day_i = 8; day_i < cityWeatherInfo.info.length; day_i += 8){
+        basicInfo = cityWeatherInfo.info[day_i];
         createForecastCard(basicInfo);
     }
     
-    basicInfo = cityWeatherInfo.list[cityWeatherInfo.list.length - 1];
+    basicInfo = cityWeatherInfo.info[cityWeatherInfo.info.length - 1];
     createForecastCard(basicInfo);
-    createHistButton(cityName);
+    
 }
 
 function cityNotRepeated(cityInfo){
-    let storedCities = JSON.parse(localStorage.getItem('allCountries'));
+    let storedCities = JSON.parse(localStorage.getItem('allCountries')) || [];
     let countryisrepeated = false;
-
     for(let city_i of storedCities){
         if(city_i.countryName === cityInfo){
             countryisrepeated = true;
         };
-
     };
     
     return countryisrepeated;
 }
 
 window.addEventListener('DOMContentLoaded', function(event){
-
     searchBar.addEventListener('keypress', function(enterKey){
         if(enterKey.key === 'Enter'){
             cityNameInput = searchBar.value;
             getGeoInfo(cityNameInput)
             .then(function(coordinates) {
-                if(!cityNotRepeated(coordinates.cityname)){
-                    console.log(coordinates !== undefined)
-                    console.log(!cityNotRepeated(coordinates.cityname))
-                    console.log(((!cityNotRepeated(coordinates.cityname)) || (coordinates !== undefined)))
+                cityApiName = coordinates.cityname;
+                if(!cityNotRepeated(cityApiName)){
                     getWeatherInfo(coordinates)
                     .then(function(data_1){
                         setTimeout(function(){
@@ -193,15 +188,20 @@ window.addEventListener('DOMContentLoaded', function(event){
                                 info:data_1.list
                             });
                             localStorage.setItem('allCountries', JSON.stringify(countriesInfo));
-                                
-                            changeCityInfo(data_1);
-                            },1000);
+                            createHistButton(data_1.city.name);
+                            },1500);
                         });
-                    }else{
-                    searchBar.value = '';
-                };
-            });
+                    }else{    
+                        searchBar.value = '';
+                    };
+                });
+            setTimeout(function(){
+                countriesInfo = JSON.parse(localStorage.getItem('allCountries'));
+                const actInfo = countriesInfo.find(country => country.countryName === cityApiName)
+                changeCityInfo(actInfo);
+            }, 2000);
+
             searchBar.value = '';
-        }
+        };
     });
 });
