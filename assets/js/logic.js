@@ -165,7 +165,8 @@ function changeCityInfo(cityWeatherInfo){
     tempMain.textContent = `Temperature : ${basicInfo.main.temp} °F`;
     windMain.textContent = `Wind : ${basicInfo.wind.speed} MPH`;
     iconMain.setAttribute('src', mainIconUrl);
-    
+    iconMain.setAttribute('class', []);
+
     for (let day_i = 8; day_i < cityWeatherInfo.info.length; day_i += 8){
         basicInfo = cityWeatherInfo.info[day_i];
         createForecastCard(basicInfo);
